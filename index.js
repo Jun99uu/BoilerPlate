@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const port = 5000
 const {User} = require('./models/User');
+const config = require('./config/key');
 
 //bodyParser가 클라이언트에서 오는 정보를 서버에서 분석해서 가져올 수 있게 해주는 것
 // applicatinx/x-www-form-ulencoded로 분석해서 가져올 수 있게 해줌
@@ -10,7 +11,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
 const mongoose = require('mongoose')
-mongoose.connect('mongodb+srv://rhon:wnsrb990614@boilerplate.v0nvl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority')
+mongoose.connect(config.mongoURI)
   .then(() => console.log('MongoDB Connected...'))
   .catch(err => console.log(err))
 
