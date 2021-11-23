@@ -4,6 +4,7 @@ const port = 5000
 const {User} = require('./models/User');
 const config = require('./config/key');
 const cookieParser = require('cookie-parser');
+const {auth} = require('./middleware/auth');
 
 //bodyParser가 클라이언트에서 오는 정보를 서버에서 분석해서 가져올 수 있게 해주는 것
 // applicatinx/x-www-form-ulencoded로 분석해서 가져올 수 있게 해줌
@@ -18,7 +19,7 @@ mongoose.connect(config.mongoURI)
   .catch(err => console.log(err))
 
 
-app.post('/register', (req, res) =>{
+app.post('/api/users/register', (req, res) =>{
   //회원 가입 할 때 필요한 정보들을 client에서 가져오면
   // 그것들을 데이터 베이스에 넣어준다.
 
@@ -32,7 +33,7 @@ app.post('/register', (req, res) =>{
   })
 })
 
-app.post('/login', (req, res) =>{
+app.post('/api/users/login', (req, res) =>{
   //요청된 이메일을 데이터베이스에서 있는지 찾음
   User.findOne({email:req.body.email}, (err, user) =>{
     if(!user){
@@ -57,6 +58,22 @@ app.post('/login', (req, res) =>{
       });
     });
   })
+})
+
+app.get('/api/users/auth', auth ,(req,res)=>{
+  //여기까지 미들웨어를 통과홨다는 이야기는, Authentication이 true라는 뜻
+  res.status(200).json({
+    _id : req.user._id,
+    //role이 0이면 일반유저, role이 0이 아니면 관리자
+    isAdmin: req.user.role === 0? false: true,
+    isAuth : true,
+    email : req.user.email,
+    name : req.user.name,
+    lastname : req.user.lastname,
+    role: req.user.role,
+    image : req.user.image
+  })
+
 })
 
 app.listen(port, () => {
