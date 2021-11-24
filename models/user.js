@@ -89,6 +89,7 @@ userSchema.statics.findByToken = function(token, cb){
     })
   })
 }
+
 //스키마를 모델로 감싸줌
 const User = mongoose.model('User', userSchema)
 

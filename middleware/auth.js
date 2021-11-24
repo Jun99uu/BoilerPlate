@@ -1,4 +1,4 @@
-const {User} = require('../modles/User')
+const {User} = require('../models/User')
 let auth = (req, res, next) => {
   //인증처리를 하는 곳
   //클라이언트 쿠키에서 토큰을 가져옴

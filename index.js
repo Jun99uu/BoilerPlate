@@ -60,6 +60,7 @@ app.post('/api/users/login', (req, res) =>{
   })
 })
 
+//경로를 전부 /api/users~ 이런식으로 바꿔줌
 app.get('/api/users/auth', auth ,(req,res)=>{
   //여기까지 미들웨어를 통과홨다는 이야기는, Authentication이 true라는 뜻
   res.status(200).json({
@@ -74,6 +75,17 @@ app.get('/api/users/auth', auth ,(req,res)=>{
     image : req.user.image
   })
 
+})
+
+app.get('/api/users/logout',auth, (req, res) => {
+  User.findOneAndUpdate({ _id : req.user._id },
+  { token: ""},
+  (err,user) => {
+    if(err) return res.json({success:false, err});
+    return res.status(200).send({
+      success:true
+    })
+  })
 })
 
 app.listen(port, () => {
